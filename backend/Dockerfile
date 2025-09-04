@@ -1,37 +1,13 @@
-FROM golang:1.22.7-alpine AS builder
-
-RUN apk add --no-cache git
-
-RUN adduser -D -g '' appuser
-
-WORKDIR /app
-
+FROM golang:1.24.3 AS build
+WORKDIR /src
 COPY go.mod go.sum ./
-
 RUN go mod download
-
 COPY . .
+RUN CGO_ENABLED=0 go build -o /output/backend ./cmd/api/
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o momo-store ./cmd/api
-
-FROM alpine:3.18
-
-RUN apk add --no-cache ca-certificates tzdata && \
-    update-ca-certificates
-
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup
-
-WORKDIR /app
-
-COPY --from=builder /app/momo-store .
-
+FROM alpine:3.21.3
+RUN apk add --no-cache curl
+RUN adduser -D -u 1000 appuser
 USER appuser
-
-EXPOSE 8081
-
-# healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget -q --spider http://localhost:8081/health || exit 1
-
-CMD ["./momo-store"]
+COPY --from=build /output/backend /usr/local/bin/backend
+ENTRYPOINT ["/usr/local/bin/backend"]
