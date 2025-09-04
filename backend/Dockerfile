@@ -4,8 +4,6 @@ RUN apk add --no-cache git
 
 RUN adduser -D -g '' appuser
 
-RUN apk update && apk add --no-cache wget
-
 WORKDIR /app
 
 COPY go.mod go.sum ./
