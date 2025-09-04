@@ -17,7 +17,7 @@ RUN addgroup -g 1001 webgroup && \
     chown -R webuser:webgroup /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build --chown=webuser:webgroup /src/dist /usr/share/nginx/html/momo-store
+COPY --from=builder --chown=webuser:webgroup /src/dist /usr/share/nginx/html/momo-store
 
 EXPOSE 80
 USER webuser
