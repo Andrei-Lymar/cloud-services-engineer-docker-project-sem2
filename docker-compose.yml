@@ -12,11 +12,11 @@ services:
     ports:
       - "8081:8081"
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8081/health || exit 0"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
       interval: 30s
       timeout: 15s
       retries: 5
-      start_period: 10s
+      start_period: 30s
     networks:
       - momo-network
     deploy:
@@ -25,7 +25,6 @@ services:
           cpus: '0.5'
           memory: 256M
     read_only: true
-
     tmpfs:
       - /tmp
 
@@ -42,11 +41,11 @@ services:
     ports:
       - "80:80"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/ || exit 0"]
+      test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
       timeout: 15s
       retries: 5
-      start_period: 10s
+      start_period: 30s
     networks:
       - momo-network
     deploy:
