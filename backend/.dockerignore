@@ -1,0 +1,24 @@
+# Двоичные файлы
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+Тестовый бинарный файл собранный командой `go test -c`
+*.test
+
+*.out
+
+# Рабочая область go
+go.work
+
+# MacOs папка
+.DS_Store
+Thumbs.db
+
+# IDEA
+.idea/
+*.iml
+*.iws
+*.ipr

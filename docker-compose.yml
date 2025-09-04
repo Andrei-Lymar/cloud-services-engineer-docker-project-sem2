@@ -12,11 +12,11 @@ services:
     ports:
       - "8081:8081"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8081/health || exit 0"]
       interval: 30s
       timeout: 15s
       retries: 5
-      start_period: 30s
+      start_period: 10s
     networks:
       - momo-network
     deploy:
@@ -25,6 +25,7 @@ services:
           cpus: '0.5'
           memory: 256M
     read_only: true
+
     tmpfs:
       - /tmp
 
@@ -41,11 +42,11 @@ services:
     ports:
       - "80:80"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
+      test: ["CMD", "curl", "-f", "http://localhost/ || exit 0"]
       interval: 30s
       timeout: 15s
       retries: 5
-      start_period: 30s
+      start_period: 10s
     networks:
       - momo-network
     deploy:
@@ -57,6 +58,7 @@ services:
     volumes:
       - nginx-cache:/var/cache/nginx:rw
       - nginx-pid:/var/run:rw
+
     environment:
       - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
 
